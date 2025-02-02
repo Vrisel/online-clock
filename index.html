@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>00:00</title>
+    <style>
+body {
+  --bg-color: white;
+  --text-color: black;
+  background-color: var(--bg-color, white);
+  color: var(--text-color, black);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body.dark {
+  --bg-color: black;
+  --text-color: white;
+}
+
+time {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 39vw;
+  font-weight: bold;
+  position: relative;
+}
+time > * {
+  transform: translateY(10%);
+}
+#second {
+  font-size: 50%;
+  position: absolute;
+  right: 0;
+  color: lightgray;
+  transform: translateY(-1.5ch);
+}
+.invisible {
+  color: var(--bg-color, white);
+}
+    </style>
+</head>
+<body class="dark">
+    <time>
+      <span id="hour">00</span>
+      <span id="colon" class>:</span>
+      <span id="minute">00</span>
+      <span id="second">00</sub>
+    </time>
+    <script type="text/javascript">
+function setClock() {
+  let now = new Date();
+
+  let hour = now.getHours().toString().padStart(2, '0');
+  let minute = now.getMinutes().toString().padStart(2, '0');
+  let second = now.getSeconds().toString().padStart(2, '0');
+  let isOddSecond = second % 2 != 0;
+
+  document.querySelector('#hour').textContent = hour;
+  document.querySelector('#minute').textContent = minute;
+  document.querySelector('#second').textContent = second;
+  let colonClasslist = document.querySelector('#colon').classList;
+  isOddSecond ? colonClasslist.add('invisible') : colonClasslist.remove('invisible');
+
+  document.querySelector('time').dateTime = `${hour}:${minute}:${second}`;
+  document.title = `${hour}:${minute}`;
+}
+
+setClock();
+setInterval(setClock, 1000);
+    </script>
+</body>
+</html>
