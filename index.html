@@ -89,7 +89,7 @@ function setClock() {
   let colonClasslist = document.querySelector('#colon').classList;
   isOddSecond ? colonClasslist.add('invisible') : colonClasslist.remove('invisible');
 
-  document.querySelector('time').dateTime = `${hour}:${minute}:${second}`;
+  document.querySelector('time').setAttribute('dateTime', `${hour}:${minute}:${second}`);
   document.title = `${hour}:${minute}`;
 }
 
