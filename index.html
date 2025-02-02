@@ -93,8 +93,10 @@ function setClock() {
   document.title = `${hour}:${minute}`;
 }
 
-setClock();
-setInterval(setClock, 1000);
+document.addEventListener('DOMContentLoaded', function onDomContentLoaded() {
+  setClock();
+  setInterval(setClock, 1000);
+});
     </script>
 </body>
 </html>
