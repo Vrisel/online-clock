@@ -79,5 +79,112 @@ document.addEventListener('DOMContentLoaded', function onDomContentLoaded() {
   setInterval(setClock, 1000);
 });
   </script>
+    <script>
+      // Cookie helper functions
+      function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+          expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      // Declare currentState, to be determined by cookie or OS preference
+      let currentState;
+
+      // Select the body element
+      const body = document.querySelector('body');
+      // Get a reference to the time element
+      const time = document.getElementById('clock-display');
+
+      // --- Initial State Determination ---
+      const currentStateFromCookie = getCookie("clockState");
+      let validCookieState = false;
+
+      if (currentStateFromCookie !== null) {
+        const parsedState = parseInt(currentStateFromCookie, 10);
+        if (!isNaN(parsedState) && parsedState >= 0 && parsedState <= 3) {
+          currentState = parsedState;
+          validCookieState = true;
+          console.log('Loaded initial state from cookie:', currentState);
+        }
+      }
+
+      if (!validCookieState) {
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        console.log('OS prefers dark mode:', prefersDarkMode);
+        if (prefersDarkMode) {
+          currentState = 0; // Dark theme, flex-column-reverse
+          console.log('Setting initial state based on OS dark mode preference:', currentState);
+        } else {
+          currentState = 3; // Light theme, flex-column-reverse
+          console.log('Setting initial state based on OS light mode preference:', currentState);
+        }
+      }
+
+      // Fallback default if no cookie and OS preference logic didn't set it (should not happen with current logic)
+      if (typeof currentState === 'undefined') {
+          currentState = 0;
+          console.log('Setting initial state to ultimate default:', currentState);
+      }
+
+      // --- Apply Initial Theme and Layout ---
+      function applyStateStyles(state) {
+        switch (state) {
+          case 0: // Dark theme, flex-column-reverse
+            body.dataset.bsTheme = "dark";
+            time.classList.remove("flex-column");
+            time.classList.add("flex-column-reverse");
+            break;
+          case 1: // Dark theme, flex-column
+            body.dataset.bsTheme = "dark";
+            time.classList.remove("flex-column-reverse");
+            time.classList.add("flex-column");
+            break;
+          case 2: // Light theme, flex-column
+            body.dataset.bsTheme = "light";
+            time.classList.remove("flex-column-reverse");
+            time.classList.add("flex-column");
+            break;
+          case 3: // Light theme, flex-column-reverse
+            body.dataset.bsTheme = "light";
+            time.classList.remove("flex-column");
+            time.classList.add("flex-column-reverse");
+            break;
+        }
+      }
+
+      applyStateStyles(currentState); // Apply styles for the initial state
+
+      // Add event listener for click events
+      body.addEventListener('click', () => {
+        // Increment currentState
+        currentState++;
+
+        // Reset currentState if it exceeds 3
+        if (currentState > 3) {
+          currentState = 0;
+        }
+
+        // Save current state to cookie
+        setCookie("clockState", currentState, 30);
+
+        // Apply styles based on the new state
+        applyStateStyles(currentState);
+      });
+    </script>
 </body>
 </html>
