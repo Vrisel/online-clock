@@ -18,6 +18,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 body.dark {
   --bg-color: black;
@@ -27,24 +28,29 @@ body.dark {
 time {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  flex-wrap: wrap-reverse;
+  justify-content: space-between;
   align-items: center;
-  font-size: 39vw;
+  font-size: min(38vw, 78vh);
   font-weight: bold;
   position: relative;
+  max-width: 206vh;
 }
 time > * {
-  transform: translateY(10%);
+  line-height: 1;
+  margin: -3% 0;
+}
+#colon {
+  font-size: 80%;
 }
 #second {
   font-size: 50%;
-  position: absolute;
-  right: 0;
+  width: 100%;
+  text-align: right;
   color: lightgray;
-  transform: translateY(-1.5ch);
 }
 .invisible {
-  color: var(--bg-color, white);
+  opacity: 0;
 }
     </style>
 </head>
